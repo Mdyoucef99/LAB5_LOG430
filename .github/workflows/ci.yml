@@ -69,7 +69,7 @@ jobs:
         run: mvn clean package
 
       - name: Build Docker image
-        run: docker build -t lab4-api .
+        run: docker build -t lab5-api .
 
   push-to-dockerhub:
     name: Push image to Docker Hub
@@ -85,8 +85,8 @@ jobs:
 
       - name: Build and tag image
         run: |
-          docker build -t docker.io/mdyoucef00/lab4-api:latest .
+          docker build -t docker.io/mdyoucef00/lab5-api:latest .
 
       - name: Push image
         run: |
-          docker push docker.io/mdyoucef00/lab4-api:latest
+          docker push docker.io/mdyoucef00/lab5-api:latest
