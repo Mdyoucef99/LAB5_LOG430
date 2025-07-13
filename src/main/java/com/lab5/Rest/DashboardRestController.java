@@ -28,7 +28,7 @@ public class DashboardRestController {
     public DashboardRestController() {
         try {
             String host = System.getenv().getOrDefault("DB_HOST", "localhost");
-            String port = System.getenv().getOrDefault("DB_PORT", "5433");
+            String port = System.getenv().getOrDefault("DB_PORT", "5432");
             String databaseUrl = "jdbc:postgresql://" + host + ":" + port + "/magasin";
             String user = "magasin_user";
             String password = "magasinpswd";

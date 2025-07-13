@@ -46,7 +46,8 @@ public class App {
            
             //get the environement we are using whether be it local or on docker 
             String host = System.getenv().getOrDefault("DB_HOST", "localhost");
-            String databaseUrl = "jdbc:postgresql://" + host + ":5432/magasin";
+            String port = System.getenv().getOrDefault("DB_PORT", "5432");
+            String databaseUrl = "jdbc:postgresql://" + host + ":" + port + "/magasin";
 
             String user = "magasin_user";
             String password = "magasinpswd";
