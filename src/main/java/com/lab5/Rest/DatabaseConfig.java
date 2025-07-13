@@ -11,7 +11,8 @@ public class DatabaseConfig {
     @Bean
     public ConnectionSource connectionSource() throws SQLException {
         String host = System.getenv().getOrDefault("DB_HOST", "localhost");
-        String databaseUrl = "jdbc:postgresql://" + host + ":5432/magasin";
+        String port = System.getenv().getOrDefault("DB_PORT", "5433");
+        String databaseUrl = "jdbc:postgresql://" + host + ":" + port + "/magasin";
         String user = "magasin_user";
         String password = "magasinpswd";
         return new JdbcConnectionSource(databaseUrl, user, password);
