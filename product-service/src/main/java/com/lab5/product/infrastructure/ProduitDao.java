@@ -2,17 +2,26 @@ package com.lab5.product.infrastructure;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.lab5.product.domain.Produit;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class ProduitDao {
     private final Dao<Produit, Integer> produitDao;
-    public ProduitDao(ConnectionSource connectionSource) throws SQLException {
+
+    public ProduitDao(DataSource dataSource) throws SQLException {
+        // Use Spring's DataSource to create an ORMLite ConnectionSource
+        String databaseUrl = "jdbc:postgresql://db:5432/magasin"; // Use the same as in SPRING_DATASOURCE_URL
+        ConnectionSource connectionSource = new DataSourceConnectionSource(dataSource, databaseUrl);
         produitDao = DaoManager.createDao(connectionSource, Produit.class);
     }
+
     public Dao<Produit, Integer> getDao() { return produitDao; }
     public void ajouterProduit(Produit p) throws SQLException { produitDao.createIfNotExists(p); }
     public List<Produit> rechercherParNom(String nom) throws SQLException {

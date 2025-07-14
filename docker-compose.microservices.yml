@@ -28,6 +28,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
       SPRING_DATASOURCE_USERNAME: magasin_user
       SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_PROFILES_ACTIVE: docker
       DB_HOST: db
       DB_PORT: 5432

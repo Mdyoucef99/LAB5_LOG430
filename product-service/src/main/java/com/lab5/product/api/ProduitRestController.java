@@ -18,24 +18,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/api/v1/products")
 @Tag(name = "Produits", description = "API pour la gestion des produits")
 public class ProduitRestController {
     private final ProduitDao produitDao;
-    public ProduitRestController() {
-        try {
-            String host = System.getenv().getOrDefault("DB_HOST", "localhost");
-            String port = System.getenv().getOrDefault("DB_PORT", "5432");
-            String databaseUrl = "jdbc:postgresql://" + host + ":" + port + "/magasin";
-            String user = "magasin_user";
-            String password = "magasinpswd";
-            ConnectionSource cs = new JdbcConnectionSource(databaseUrl, user, password);
-            this.produitDao = new ProduitDao(cs);
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur d'initialisation de la connexion à la base", e);
-        }
+
+    @Autowired
+    public ProduitRestController(ProduitDao produitDao) {
+        this.produitDao = produitDao;
     }
     @GetMapping
     @Operation(summary = "Récupérer tous les produits", description = "Retourne la liste complète de tous les produits disponibles")
