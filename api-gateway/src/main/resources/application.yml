@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: http://product-service:8080
+          predicates:
+            - Path=/products/**, /api/v1/products/**
+        - id: inventory-service
+          uri: http://inventory-service:8080
+          predicates:
+            - Path=/inventory/**, /api/v1/stores/**
+        - id: reporting-service
+          uri: http://reporting-service:8080
+          predicates:
+            - Path=/reports/**, /api/v1/reports/** 

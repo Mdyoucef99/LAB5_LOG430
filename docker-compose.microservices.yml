@@ -65,5 +65,14 @@ services:
     depends_on:
       - db
 
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - product-service
+      - inventory-service
+      - reporting-service
+
 volumes:
   db_data: 
