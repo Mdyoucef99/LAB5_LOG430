@@ -16,4 +16,12 @@ spring:
         - id: reporting-service
           uri: http://reporting-service:8080
           predicates:
-            - Path=/reports/**, /api/v1/reports/** 
+            - Path=/reports/**, /api/v1/reports/**
+        - id: customer-service
+          uri: http://customer-service:8080
+          predicates:
+            - Path=/customers/**, /api/v1/customers/**
+        - id: cart-service
+          uri: http://cart-service:8080
+          predicates:
+            - Path=/carts/**, /api/v1/carts/** 

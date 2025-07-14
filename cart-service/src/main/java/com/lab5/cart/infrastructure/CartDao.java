@@ -16,7 +16,7 @@ public class CartDao {
     private final Dao<Cart, Integer> cartDao;
 
     public CartDao(DataSource dataSource) throws SQLException {
-        String databaseUrl = "jdbc:postgresql://db:5432/postgres";
+        String databaseUrl = "jdbc:postgresql://db:5432/magasin";
         ConnectionSource connectionSource = new DataSourceConnectionSource(dataSource, databaseUrl);
         cartDao = DaoManager.createDao(connectionSource, Cart.class);
     }
