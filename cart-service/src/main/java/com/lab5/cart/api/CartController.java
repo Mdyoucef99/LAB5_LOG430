@@ -7,6 +7,7 @@ import com.lab5.cart.domain.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -18,28 +19,31 @@ public class CartController {
     private CartItemDao cartItemDao;
 
     @GetMapping
-    public List<Cart> getAllCarts() {
+    public List<Cart> getAllCarts() throws SQLException {
         return cartDao.findAll();
     }
 
     @PostMapping
-    public Cart createCart(@RequestBody Cart cart) {
-        return cartDao.save(cart);
+    public Cart createCart(@RequestBody Cart cart) throws SQLException {
+        cartDao.create(cart);
+        return cart;
     }
 
     @GetMapping("/{id}")
-    public Cart getCart(@PathVariable Long id) {
-        return cartDao.findById(id).orElse(null);
+    public Cart getCart(@PathVariable int id) throws SQLException {
+        return cartDao.findById(id);
     }
 
     @PostMapping("/{cartId}/items")
-    public CartItem addItemToCart(@PathVariable Long cartId, @RequestBody CartItem item) {
-        item.setCartId(cartId);
-        return cartItemDao.save(item);
+    public CartItem addItemToCart(@PathVariable int cartId, @RequestBody CartItem item) throws SQLException {
+        // On force le cartId reçu dans l'URL
+        CartItem newItem = new CartItem(cartId, item.getProductId(), item.getQuantity());
+        cartItemDao.create(newItem);
+        return newItem;
     }
 
     @GetMapping("/{cartId}/items")
-    public List<CartItem> getCartItems(@PathVariable Long cartId) {
-        return cartItemDao.findAll().stream().filter(i -> i.getCartId().equals(cartId)).toList();
+    public List<CartItem> getCartItems(@PathVariable int cartId) throws SQLException {
+        return cartItemDao.findByCartId(cartId);
     }
 } 
