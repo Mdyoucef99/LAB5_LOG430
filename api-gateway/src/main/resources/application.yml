@@ -24,4 +24,8 @@ spring:
         - id: cart-service
           uri: http://cart-service:8080
           predicates:
-            - Path=/carts/**, /api/v1/carts/** 
+            - Path=/carts/**, /api/v1/carts/**
+        - id: order-service
+          uri: http://order-service:8080
+          predicates:
+            - Path=/orders/**, /api/v1/orders/** 
