@@ -7,9 +7,9 @@ import com.j256.ormlite.table.DatabaseTable;
 public class CartItem {
     @DatabaseField(generatedId = true)
     private int id;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "cart_id", canBeNull = false)
     private int cartId;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "product_id", canBeNull = false)
     private int productId;
     @DatabaseField(canBeNull = false)
     private int quantity;
