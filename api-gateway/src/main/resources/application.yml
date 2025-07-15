@@ -22,10 +22,16 @@ spring:
           predicates:
             - Path=/customers/**, /api/v1/customers/**
         - id: cart-service
-          uri: http://cart-service:8080
+          uri: lb://cart-service
           predicates:
             - Path=/carts/**, /api/v1/carts/**
         - id: order-service
           uri: http://order-service:8080
           predicates:
-            - Path=/orders/**, /api/v1/orders/** 
+            - Path=/orders/**, /api/v1/orders/**
+
+# Configuration du load balancer
+ribbon:
+  cart-service:
+    listOfServers: cart-service:8080,cart-service-2:8080
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule 

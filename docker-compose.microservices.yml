@@ -75,6 +75,7 @@ services:
       - reporting-service
       - customer-service
       - cart-service
+      - cart-service-2
       - order-service
 
   customer-service:
@@ -96,6 +97,21 @@ services:
     build: ./cart-service
     ports:
       - "8085:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
+      SPRING_DATASOURCE_USERNAME: magasin_user
+      SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+
+  cart-service-2:
+    build: ./cart-service
+    ports:
+      - "8087:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
       SPRING_DATASOURCE_USERNAME: magasin_user
