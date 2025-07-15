@@ -4,6 +4,12 @@ server:
 spring:
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "GET,POST,PUT,DELETE"
+            allowed-headers: "*"
       routes:
         - id: product-service
           uri: http://product-service:8080
@@ -22,18 +28,10 @@ spring:
           predicates:
             - Path=/customers/**, /api/v1/customers/**
         - id: cart-service
-          uri: lb://cart-service
+          uri: http://cart-service:8080
           predicates:
             - Path=/carts/**, /api/v1/carts/**
         - id: order-service
           uri: http://order-service:8080
           predicates:
-            - Path=/orders/**, /api/v1/orders/**
-
-# Configuration du load balancer
-spring:
-  cloud:
-    loadbalancer:
-      configurations: default
-      ribbon:
-        enabled: false 
+            - Path=/orders/**, /api/v1/orders/** 

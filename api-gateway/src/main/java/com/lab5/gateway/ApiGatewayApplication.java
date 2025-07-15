@@ -28,15 +28,12 @@ public class ApiGatewayApplication {
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
 
-            // Add request headers
+            // Add simple headers
             ServerHttpRequest modifiedRequest = request.mutate()
-                    .header("X-Gateway-Source", "api-gateway")
-                    .header("X-Request-Timestamp", Instant.now().toString())
+                    .header("X-Gateway", "api-gateway")
                     .build();
 
-            // Add response headers
-            response.getHeaders().add("X-Gateway-Response", "processed");
-            response.getHeaders().add("X-Response-Timestamp", Instant.now().toString());
+            response.getHeaders().add("X-Gateway-Response", "ok");
 
             return chain.filter(exchange.mutate().request(modifiedRequest).build());
         }
