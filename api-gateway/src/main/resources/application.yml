@@ -34,4 +34,12 @@ spring:
         - id: order-service
           uri: http://order-service:8080
           predicates:
-            - Path=/orders/**, /api/v1/orders/** 
+            - Path=/orders/**, /api/v1/orders/**
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    config-url: /api-docs/swagger-config
+  api-docs:
+    path: /api-docs
+  default-produces-media-type: application/json 
