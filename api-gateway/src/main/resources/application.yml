@@ -31,7 +31,9 @@ spring:
             - Path=/orders/**, /api/v1/orders/**
 
 # Configuration du load balancer
-ribbon:
-  cart-service:
-    listOfServers: cart-service:8080,cart-service-2:8080
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule 
+spring:
+  cloud:
+    loadbalancer:
+      configurations: default
+      ribbon:
+        enabled: false 
