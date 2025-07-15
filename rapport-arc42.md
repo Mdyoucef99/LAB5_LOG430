@@ -16,13 +16,13 @@ Ce projet vise à fournir une architecture microservices simple pour la gestion 
 - Documentation API avec OpenAPI/Swagger
 - ORMLite pour la persistance
 
-## 3. Vue contextuelle
+## 3. Vue cas utilisation
 ![Vue contextuelle du projet](docs/lab5/UML/Vue_CU.png)
 *Figure 1 : Vue cas d'utilisation du projet*
 
 Le système est composé de plusieurs microservices : product-service, inventory-service, order-service, customer-service, reporting-service, tous orchestrés derrière une API Gateway. Chaque service possède sa propre base de code et communique via HTTP/REST. **Tous les services partagent la même base de données PostgreSQL (magasin).**
 
-## 4. Vue des solutions
+## 4. Vue logique
 ![Vue logique de l'architecture](docs/lab5/UML/Vue_logique.png)
 *Figure 2 : Vue logique de l'architecture*
 
@@ -51,7 +51,16 @@ Le système est composé de plusieurs microservices : product-service, invento
 - Docker Compose orchestre les conteneurs : base de données, services, monitoring.
 - Chaque service expose son port, l’API Gateway redirige les requêtes externes.
 
-## 8. Vue des décisions architecturales (ADR)
+## 8. diagramme de sequence : 
+
+![diagramme de sequence pour une requete de demande de liste des produits](docs/lab5/UML/sequence_diagram.png)
+
+## 9. diagramme de composante : 
+
+![diagramme de composante ](docs/lab5/UML/component_diagram.png)
+
+
+## 10. Vue des décisions architecturales (ADR)
 
 ### ADR-1 : Utilisation de Spring Cloud Gateway pour l’API Gateway
 **Contexte** : Il faut un point d’entrée unique pour les clients, capable de router les requêtes vers les bons microservices, gérer la sécurité, la documentation, et éventuellement le load balancing.

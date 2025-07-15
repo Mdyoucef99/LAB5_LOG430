@@ -1,0 +1,21 @@
+@startuml
+package "Client" {
+  [Client Web]
+}
+
+package "API" {
+  [API (Spring Boot)]
+}
+
+database "PostgreSQL" as DB
+
+package "Monitoring" {
+  [Prometheus]
+  [Grafana]
+}
+
+[Client Web] --> [API (Spring Boot)]
+[API (Spring Boot)] --> DB
+[Prometheus] --> [API (Spring Boot)]
+[Grafana] --> [Prometheus]
+@enduml
