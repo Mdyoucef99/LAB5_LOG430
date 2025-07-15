@@ -1,3 +1,8 @@
+### NOM : youcef mekki daouadji   
+### Cours : LOG430-01
+### lien github : Mdyoucef99/LAB5_LOG430
+
+
 # Rapport d’architecture (Arc42) – LAB5 Microservices
 
 ## 1. Introduction et objectifs
@@ -13,7 +18,7 @@ Ce projet vise à fournir une architecture microservices simple pour la gestion 
 
 ## 3. Vue contextuelle
 ![Vue contextuelle du projet](docs/lab5/UML/Vue_CU.png)
-*Figure 1 : Vue contextuelle du projet*
+*Figure 1 : Vue cas d'utilisation du projet*
 
 Le système est composé de plusieurs microservices : product-service, inventory-service, order-service, customer-service, reporting-service, tous orchestrés derrière une API Gateway. Chaque service possède sa propre base de code et communique via HTTP/REST. **Tous les services partagent la même base de données PostgreSQL (magasin).**
 
@@ -30,7 +35,7 @@ Le système est composé de plusieurs microservices : product-service, invento
 
 ## 5. Vue d’implémentation
 ![Vue d'implémentation](docs/lab5/UML/Vue_implementation.png)
-*Figure 3 : Vue d'implémentation des composants principaux*
+*Figure 3 : Vue d'implémentation*
 
 ## 6. Justification des choix
 - **Simplicité** : Architecture microservices minimale, chaque service est autonome au niveau du code, mais **les données sont centralisées dans une base partagée** pour simplifier la gestion et l’intégration.
@@ -76,5 +81,13 @@ Le système est composé de plusieurs microservices : product-service, invento
 - **Prometheus/Grafana** : Outils de monitoring et visualisation. 
 
 
+### Précisions complémentaires
 
+Faute de temps, je n'ai pas réussi à mettre en place le tableau de bord Grafana pour le LAB5, car je n'ai pas pu configurer correctement la source de données pour envoyer les métriques à Grafana. Cependant, je peux apporter quelques précisions sur le comportement du load balancer de l'API Gateway :
+
+J'ai lancé deux instances du service cart et commencé à appeler les endpoints correspondants. Il m'a semblé que lorsque plusieurs requêtes étaient envoyées successivement, le load balancer répartissait bien la charge : si la première instance du service cart était occupée avec une requête, la deuxième instance (libre) prenait en charge la suivante. Dans le README, vous trouverez des captures d'écran de Grafana illustrant ce comportement de répartition de charge. Ces résultats montrent clairement que le load balancer fonctionne comme attendu.
+
+Concernant la documentation Swagger, un fichier `swagger.yaml` est disponible à la racine du projet. Cependant, je n'ai pas réussi à l'intégrer au niveau de l'API Gateway pour exposer tous les endpoints agrégés. Pour contourner cette limitation, le README liste explicitement les endpoints accessibles via les différents ports localhost.
+
+Suite a votre demande vous pouvvez aussi trouver le rapport du labo 4 dans le fichier racine et dans le boite moodle du rapport 5 
 
