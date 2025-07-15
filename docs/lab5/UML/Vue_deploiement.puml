@@ -1,20 +1,59 @@
 @startuml
 
-node "Docker Host" as Host {
-  folder "Docker Compose" {
-    node "API Container" as API {
-     
-    component "CaisseService"
-    component "Réapprovisionnement"
-    component "Génération de rapport"
-    
-    }
-    node "DB Container Postgres" as DB {
-      database "magasin"
-    }
+' Représentation des utilisateurs
+actor "Client Web" as client
+
+' Conteneur Docker pour l'API Gateway
+node "Docker Host" {
+  node "api-gateway (container)" {
+    [api-gateway]
+  }
+  node "cart-service (container)" {
+    [cart-service]
+  }
+  node "customer-service (container)" {
+    [customer-service]
+  }
+  node "inventory-service (container)" {
+    [inventory-service]
+  }
+  node "product-service (container)" {
+    [product-service]
+  }
+  node "reporting-service (container)" {
+    [reporting-service]
+  }
+  node "db (container)" {
+    database "PostgreSQL"
+  }
+  node "prometheus (container)" {
+    [Prometheus]
+  }
+  node "grafana (container)" {
+    [Grafana]
   }
 }
 
-API --> DB : JDBC
+' Flux de communication
+client --> [api-gateway]
+[api-gateway] --> [cart-service] : REST
+[api-gateway] --> [customer-service] : REST
+[api-gateway] --> [inventory-service]: REST
+[api-gateway] --> [product-service]: REST
+[api-gateway] --> [reporting-service]: REST
+
+[cart-service] --> [PostgreSQL]: JDBC
+[customer-service] --> [PostgreSQL]: JDBC
+[inventory-service] --> [PostgreSQL]: JDBC
+[product-service] --> [PostgreSQL]: JDBC
+[reporting-service] --> [PostgreSQL]: JDBC
+
+[Prometheus] --> [cart-service]: Metrics
+[Prometheus] --> [customer-service]: Metrics
+[Prometheus] --> [inventory-service]: Metrics
+[Prometheus] --> [product-service]: Metrics
+[Prometheus] --> [reporting-service]: DataSource
+[Grafana] --> [Prometheus]
+
 
 @enduml
