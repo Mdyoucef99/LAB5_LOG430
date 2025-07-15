@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LAB5 API Gateway - Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css" />
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js"></script>
+    <script>
+        window.onload = function() {
+            const spec = {
+                "openapi": "3.0.3",
+                "info": {
+                    "title": "LAB5 API Gateway",
+                    "description": "API Gateway pour microservices",
+                    "version": "1.0.0"
+                },
+                "servers": [
+                    {
+                        "url": "http://localhost:8080",
+                        "description": "API Gateway"
+                    }
+                ],
+                "paths": {
+                    "/api/v1/products": {
+                        "get": {
+                            "summary": "Liste des produits",
+                            "tags": ["Products"],
+                            "responses": {
+                                "200": {
+                                    "description": "OK"
+                                }
+                            }
+                        },
+                        "post": {
+                            "summary": "Créer produit",
+                            "tags": ["Products"],
+                            "requestBody": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "nom": {
+                                                    "type": "string"
+                                                },
+                                                "prix": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "responses": {
+                                "201": {
+                                    "description": "Créé"
+                                }
+                            }
+                        }
+                    },
+                    "/api/v1/stores": {
+                        "get": {
+                            "summary": "Liste des magasins",
+                            "tags": ["Inventory"],
+                            "responses": {
+                                "200": {
+                                    "description": "OK"
+                                }
+                            }
+                        }
+                    },
+                    "/api/v1/customers": {
+                        "get": {
+                            "summary": "Liste des clients",
+                            "tags": ["Customers"],
+                            "responses": {
+                                "200": {
+                                    "description": "OK"
+                                }
+                            }
+                        },
+                        "post": {
+                            "summary": "Créer client",
+                            "tags": ["Customers"],
+                            "requestBody": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "nom": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "responses": {
+                                "201": {
+                                    "description": "Créé"
+                                }
+                            }
+                        }
+                    },
+                    "/api/v1/carts": {
+                        "get": {
+                            "summary": "Liste des paniers",
+                            "tags": ["Carts"],
+                            "responses": {
+                                "200": {
+                                    "description": "OK"
+                                }
+                            }
+                        },
+                        "post": {
+                            "summary": "Créer panier",
+                            "tags": ["Carts"],
+                            "requestBody": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "clientId": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "responses": {
+                                "201": {
+                                    "description": "Créé"
+                                }
+                            }
+                        }
+                    },
+                    "/api/v1/orders": {
+                        "get": {
+                            "summary": "Liste des commandes",
+                            "tags": ["Orders"],
+                            "responses": {
+                                "200": {
+                                    "description": "OK"
+                                }
+                            }
+                        },
+                        "post": {
+                            "summary": "Créer commande",
+                            "tags": ["Orders"],
+                            "requestBody": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "clientId": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "responses": {
+                                "201": {
+                                    "description": "Créé"
+                                }
+                            }
+                        }
+                    },
+                    "/api/v1/reports/products": {
+                        "get": {
+                            "summary": "Rapport produits",
+                            "tags": ["Reports"],
+                            "responses": {
+                                "200": {
+                                    "description": "OK"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    {
+                        "name": "Products"
+                    },
+                    {
+                        "name": "Inventory"
+                    },
+                    {
+                        "name": "Customers"
+                    },
+                    {
+                        "name": "Carts"
+                    },
+                    {
+                        "name": "Orders"
+                    },
+                    {
+                        "name": "Reports"
+                    }
+                ]
+            };
+
+            SwaggerUIBundle({
+                spec: spec,
+                dom_id: '#swagger-ui',
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                layout: "StandaloneLayout"
+            });
+        }
+    </script>
+</body>
+</html> 
