@@ -1,70 +1,227 @@
 version: '3.8'
 
 services:
-  db:
+  # Product Service Database
+  product-db:
     image: postgres:16
-    container_name: lab5_postgres
+    container_name: product_db
     environment:
-      POSTGRES_DB: magasin
-      POSTGRES_USER: magasin_user
-      POSTGRES_PASSWORD: magasinpswd
+      POSTGRES_DB: product_db
+      POSTGRES_USER: product_user
+      POSTGRES_PASSWORD: productpswd
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    #  - ./db/local_backup.sql:/docker-entrypoint-initdb.d/local_backup.sql
+      - product_db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U magasin_user -d magasin"]
+      test: ["CMD-SHELL", "pg_isready -U product_user -d product_db"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # Inventory Service Database
+  inventory-db:
+    image: postgres:16
+    container_name: inventory_db
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: inventory_user
+      POSTGRES_PASSWORD: inventorypswd
+    ports:
+      - "5435:5432"
+    volumes:
+      - inventory_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory_user -d inventory_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Reporting Service Database
+  reporting-db:
+    image: postgres:16
+    container_name: reporting_db
+    environment:
+      POSTGRES_DB: reporting_db
+      POSTGRES_USER: reporting_user
+      POSTGRES_PASSWORD: reportingpswd
+    ports:
+      - "5436:5432"
+    volumes:
+      - reporting_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reporting_user -d reporting_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Customer Service Database
+  customer-db:
+    image: postgres:16
+    container_name: customer_db
+    environment:
+      POSTGRES_DB: customer_db
+      POSTGRES_USER: customer_user
+      POSTGRES_PASSWORD: customerpswd
+    ports:
+      - "5437:5432"
+    volumes:
+      - customer_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U customer_user -d customer_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Cart Service Database (shared by both cart-service instances)
+  cart-db:
+    image: postgres:16
+    container_name: cart_db
+    environment:
+      POSTGRES_DB: cart_db
+      POSTGRES_USER: cart_user
+      POSTGRES_PASSWORD: cartpswd
+    ports:
+      - "5438:5432"
+    volumes:
+      - cart_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cart_user -d cart_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Order Service Database
+  order-db:
+    image: postgres:16
+    container_name: order_db
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: order_user
+      POSTGRES_PASSWORD: orderpswd
+    ports:
+      - "5439:5432"
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U order_user -d order_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Product Service
   product-service:
     build: ./product-service
     ports:
       - "8081:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_URL: jdbc:postgresql://product-db:5432/product_db
+      SPRING_DATASOURCE_USERNAME: product_user
+      SPRING_DATASOURCE_PASSWORD: productpswd
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
+      DB_HOST: product-db
       DB_PORT: 5432
     depends_on:
-      - db
+      - product-db
 
+  # Inventory Service
   inventory-service:
     build: ./inventory-service
     ports:
       - "8082:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_URL: jdbc:postgresql://inventory-db:5432/inventory_db
+      SPRING_DATASOURCE_USERNAME: inventory_user
+      SPRING_DATASOURCE_PASSWORD: inventorypswd
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
+      DB_HOST: inventory-db
       DB_PORT: 5432
     depends_on:
-      - db
+      - inventory-db
 
+  # Reporting Service
   reporting-service:
     build: ./reporting-service
     ports:
       - "8083:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_URL: jdbc:postgresql://reporting-db:5432/reporting_db
+      SPRING_DATASOURCE_USERNAME: reporting_user
+      SPRING_DATASOURCE_PASSWORD: reportingpswd
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
+      DB_HOST: reporting-db
       DB_PORT: 5432
     depends_on:
-      - db
+      - reporting-db
 
+  # Customer Service
+  customer-service:
+    build: ./customer-service
+    ports:
+      - "8084:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://customer-db:5432/customer_db
+      SPRING_DATASOURCE_USERNAME: customer_user
+      SPRING_DATASOURCE_PASSWORD: customerpswd
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: customer-db
+      DB_PORT: 5432
+    depends_on:
+      - customer-db
+
+  # Cart Service (instance 1)
+  cart-service:
+    build: ./cart-service
+    ports:
+      - "8085:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://cart-db:5432/cart_db
+      SPRING_DATASOURCE_USERNAME: cart_user
+      SPRING_DATASOURCE_PASSWORD: cartpswd
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: cart-db
+      DB_PORT: 5432
+    depends_on:
+      - cart-db
+
+  # Cart Service (instance 2 for load balancing)
+  cart-service-2:
+    build: ./cart-service
+    ports:
+      - "8087:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://cart-db:5432/cart_db
+      SPRING_DATASOURCE_USERNAME: cart_user
+      SPRING_DATASOURCE_PASSWORD: cartpswd
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: cart-db
+      DB_PORT: 5432
+    depends_on:
+      - cart-db
+
+  # Order Service
+  order-service:
+    build: ./order-service
+    ports:
+      - "8086:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://order-db:5432/order_db
+      SPRING_DATASOURCE_USERNAME: order_user
+      SPRING_DATASOURCE_PASSWORD: orderpswd
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: order-db
+      DB_PORT: 5432
+    depends_on:
+      - order-db
+
+  # API Gateway (no DB needed)
   api-gateway:
     build: ./api-gateway
     ports:
@@ -78,65 +235,10 @@ services:
       - cart-service-2
       - order-service
 
-  customer-service:
-    build: ./customer-service
-    ports:
-      - "8084:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
-      DB_PORT: 5432
-    depends_on:
-      - db
-
-  cart-service:
-    build: ./cart-service
-    ports:
-      - "8085:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
-      DB_PORT: 5432
-    depends_on:
-      - db
-
-  cart-service-2:
-    build: ./cart-service
-    ports:
-      - "8087:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
-      DB_PORT: 5432
-    depends_on:
-      - db
-
-  order-service:
-    build: ./order-service
-    ports:
-      - "8086:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
-      DB_PORT: 5432
-    depends_on:
-      - db
-
 volumes:
-  db_data: 
+  product_db_data:
+  inventory_db_data:
+  reporting_db_data:
+  customer_db_data:
+  cart_db_data:
+  order_db_data: 
