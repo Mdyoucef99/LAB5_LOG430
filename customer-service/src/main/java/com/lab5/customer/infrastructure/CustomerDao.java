@@ -15,7 +15,7 @@ import java.util.List;
 public class CustomerDao {
     private final Dao<Customer, Integer> customerDao;
     public CustomerDao(DataSource dataSource) throws SQLException {
-        String databaseUrl = "jdbc:postgresql://customer-db:5432/customer_db"; // Updated for DDD
+        String databaseUrl = "jdbc:postgresql://customer-db:5432/customer_db";
         ConnectionSource connectionSource = new DataSourceConnectionSource(dataSource, databaseUrl);
         customerDao = DaoManager.createDao(connectionSource, Customer.class);
     }

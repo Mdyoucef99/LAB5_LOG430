@@ -17,7 +17,8 @@ public class ProduitDao {
 
     public ProduitDao(DataSource dataSource) throws SQLException {
         // Use Spring's DataSource to create an ORMLite ConnectionSource
-        ConnectionSource connectionSource = new DataSourceConnectionSource(dataSource, "jdbc:postgresql://product-db:5432/product_db");
+        String databaseUrl = "jdbc:postgresql://product-db:5432/product_db"; // Updated for dedicated product database
+        ConnectionSource connectionSource = new DataSourceConnectionSource(dataSource, databaseUrl);
         produitDao = DaoManager.createDao(connectionSource, Produit.class);
     }
 
