@@ -134,20 +134,39 @@ services:
       - cart-service-2
       - order-service
 
+  customer-db:
+    image: postgres:16
+    container_name: lab5_customer_db
+    environment:
+      POSTGRES_DB: customer_db
+      POSTGRES_USER: customer_user
+      POSTGRES_PASSWORD: customer_password
+    ports:
+      - "5438:5432"
+    volumes:
+      - customer_db_data:/var/lib/postgresql/data
+      - ./db/customer-init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U customer_user -d customer_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   customer-service:
     build: ./customer-service
     ports:
       - "8084:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_URL: jdbc:postgresql://customer-db:5432/customer_db
+      SPRING_DATASOURCE_USERNAME: customer_user
+      SPRING_DATASOURCE_PASSWORD: customer_password
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
+      DB_HOST: customer-db
       DB_PORT: 5432
     depends_on:
-      - db
+      customer-db:
+        condition: service_healthy
 
   cart-service:
     build: ./cart-service
@@ -218,4 +237,5 @@ volumes:
   product_db_data:
   reporting_db_data:
   inventory_db_data:
-  order_db_data: 
+  order_db_data:
+  customer_db_data: 
