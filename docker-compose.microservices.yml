@@ -1,25 +1,6 @@
 version: '3.8'
 
 services:
-  # Product Service Database
-  product-db:
-    image: postgres:16
-    container_name: product_db
-    environment:
-      POSTGRES_DB: product_db
-      POSTGRES_USER: product_user
-      POSTGRES_PASSWORD: productpswd
-    ports:
-      - "5434:5432"
-    volumes:
-      - product_db_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U product_user -d product_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   product-db:
     image: postgres:16
     container_name: lab5_product_db
@@ -248,7 +229,6 @@ services:
       - reporting-service
       - customer-service
       - cart-service
-      - cart-service-2
       - order-service
 
 volumes:
