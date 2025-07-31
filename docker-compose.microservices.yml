@@ -68,20 +68,39 @@ services:
     depends_on:
       - db
 
+  reporting-db:
+    image: postgres:16
+    container_name: lab5_reporting_db
+    environment:
+      POSTGRES_DB: reporting_db
+      POSTGRES_USER: reporting_user
+      POSTGRES_PASSWORD: reporting_password
+    ports:
+      - "5435:5432"
+    volumes:
+      - reporting_db_data:/var/lib/postgresql/data
+      - ./db/reporting-init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reporting_user -d reporting_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   reporting-service:
     build: ./reporting-service
     ports:
       - "8083:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_URL: jdbc:postgresql://reporting-db:5432/reporting_db
+      SPRING_DATASOURCE_USERNAME: reporting_user
+      SPRING_DATASOURCE_PASSWORD: reporting_password
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
+      DB_HOST: reporting-db
       DB_PORT: 5432
     depends_on:
-      - db
+      reporting-db:
+        condition: service_healthy
 
   api-gateway:
     build: ./api-gateway
@@ -158,4 +177,5 @@ services:
 
 volumes:
   db_data:
-  product_db_data: 
+  product_db_data:
+  reporting_db_data: 

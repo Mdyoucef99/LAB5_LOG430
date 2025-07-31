@@ -15,7 +15,7 @@ import java.util.List;
 public class ProduitDao {
     private final Dao<Produit, Integer> produitDao;
     public ProduitDao(DataSource dataSource) throws SQLException {
-        String databaseUrl = "jdbc:postgresql://db:5432/magasin";
+        String databaseUrl = "jdbc:postgresql://reporting-db:5432/reporting_db";
         ConnectionSource connectionSource = new DataSourceConnectionSource(dataSource, databaseUrl);
         produitDao = DaoManager.createDao(connectionSource, Produit.class);
     }
