@@ -13,9 +13,26 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    #  - ./db/local_backup.sql:/docker-entrypoint-initdb.d/local_backup.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U magasin_user -d magasin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  product-db:
+    image: postgres:16
+    container_name: lab5_product_db
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: product_user
+      POSTGRES_PASSWORD: product_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - product_db_data:/var/lib/postgresql/data
+      - ./db/product-init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U product_user -d product_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,15 +42,16 @@ services:
     ports:
       - "8081:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/magasin
-      SPRING_DATASOURCE_USERNAME: magasin_user
-      SPRING_DATASOURCE_PASSWORD: magasinpswd
+      SPRING_DATASOURCE_URL: jdbc:postgresql://product-db:5432/product_db
+      SPRING_DATASOURCE_USERNAME: product_user
+      SPRING_DATASOURCE_PASSWORD: product_password
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: db
+      DB_HOST: product-db
       DB_PORT: 5432
     depends_on:
-      - db
+      product-db:
+        condition: service_healthy
 
   inventory-service:
     build: ./inventory-service
@@ -139,4 +157,5 @@ services:
       - db
 
 volumes:
-  db_data: 
+  db_data:
+  product_db_data: 
