@@ -19,7 +19,7 @@ public class StockDao {
     private final Dao<Stock, Void> dao;
 
     public StockDao(DataSource dataSource) throws SQLException {
-        String databaseUrl = "jdbc:postgresql://db:5432/magasin";
+        String databaseUrl = "jdbc:postgresql://inventory-db:5432/inventory_db";
         ConnectionSource connectionSource = new DataSourceConnectionSource(dataSource, databaseUrl);
         this.dao = DaoManager.createDao(connectionSource, Stock.class);
     }
