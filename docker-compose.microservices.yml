@@ -202,22 +202,6 @@ services:
       cart-db:
         condition: service_healthy
 
-  cart-service-2:
-    build: ./cart-service
-    ports:
-      - "8087:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://cart-db:5432/cart_db
-      SPRING_DATASOURCE_USERNAME: cart_user
-      SPRING_DATASOURCE_PASSWORD: cart_password
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_PROFILES_ACTIVE: docker
-      DB_HOST: cart-db
-      DB_PORT: 5432
-    depends_on:
-      cart-db:
-        condition: service_healthy
-
   order-db:
     image: postgres:16
     container_name: lab5_order_db
