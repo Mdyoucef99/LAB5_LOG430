@@ -132,7 +132,6 @@ services:
       - reporting-service
       - customer-service
       - cart-service
-      - cart-service-2
       - order-service
 
   customer-db:
